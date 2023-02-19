@@ -10,11 +10,14 @@ class ListExercise:
         """
         if not input_list:
             return []
-        max_val = max(input_list)
+        max_val = input_list[0]
+        for el in input_list:
+            if el > max_val:
+                max_val = el
         return [max_val if el > 0 else el for el in input_list]
 
     @staticmethod
-    def search(input_list: list[int], query: int) -> int:
+    def search(input_list: list[int], query: int, left: int = 0, right: int = -1) -> int:
         """
         Реализовать двоичный поиск
         Функция должна возвращать индекс элемента
@@ -27,13 +30,17 @@ class ListExercise:
             return -1
         if len(input_list) == 1:
             return 0 if input_list[0] == query else -1
-        left, right = 0, len(input_list)
-        while left < right:
+        if right == -1:
+            right = len(input_list)
+
+        while left <= right:
+
             m = (left + right) // 2
-            if input_list[m] == query:
-                return m
+
+            if input_list[m] > query:
+                return ListExercise.search(input_list, query, left, m - 1)
             elif input_list[m] < query:
-                left = m + 1
+                return ListExercise.search(input_list, query, m + 1, right)
             else:
-                right = m
+                return m
         return -1
